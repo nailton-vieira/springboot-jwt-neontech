@@ -26,7 +26,7 @@ WORKDIR /app
 # Copia o arquivo JAR do estágio de build
 # O Spring Boot gera um arquivo JAR executável
 # Substitua 'seu-projeto' pelo nome do seu artefato JAR
-COPY --from=build /target/backend-app-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/backend-app-0.0.1-SNAPSHOT.jar app.jar
 
 # Expõe a porta que a aplicação vai escutar
 EXPOSE 8080

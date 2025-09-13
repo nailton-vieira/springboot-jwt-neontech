@@ -1,16 +1,36 @@
-FROM ubuntu:latest AS build
+# Estágio de build - utiliza uma imagem base completa para compilar o projeto
+# O 'builder' é um nome de estágio, útil para o multi-stage build
+FROM eclipse-temurin:21-jdk-jammy AS builder
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
-COPY . .
+# Define o diretório de trabalho dentro do container
+WORKDIR /app
 
-RUN apt-get install maven -y
-RUN mvn clean install 
+# Copia o arquivo de build (pom.xml) para resolver as dependências
+COPY pom.xml .
 
-FROM openjdk:21-jdk-slim
+# Copia o código fonte da aplicação
+COPY src ./src
 
-EXPOSE 8080
+# Executa o build do projeto Spring Boot
+# O comando '--no-transfer-progress' é para evitar logs verbosos
+# 'clean install' limpa e instala o pacote Maven
+RUN ./mvnw clean install -DskipTests --no-transfer-progress
 
+# Estágio de execução - utiliza uma imagem base menor e mais segura
+# A imagem 'jammy-jre' é ideal por ter apenas o JRE
+FROM eclipse-temurin:21-jre-jammy
+
+# Define o diretório de trabalho para a aplicação em produção
+WORKDIR /app
+
+# Copia o arquivo JAR do estágio de build
+# O Spring Boot gera um arquivo JAR executável
+# Substitua 'seu-projeto' pelo nome do seu artefato JAR
 COPY --from=build /target/backend-app-0.0.1-SNAPSHOT.jar app.jar
 
+# Expõe a porta que a aplicação vai escutar
+EXPOSE 8080
+
+# Comando para rodar a aplicação quando o container iniciar
+# Usa 'java -jar' para executar o arquivo JAR
 ENTRYPOINT [ "java", "-jar", "app.jar" ]

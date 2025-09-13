@@ -1,6 +1,6 @@
 # Estágio de build - utiliza uma imagem base completa para compilar o projeto
 # O 'builder' é um nome de estágio, útil para o multi-stage build
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
@@ -14,7 +14,7 @@ COPY src ./src
 # Executa o build do projeto Spring Boot
 # O comando '--no-transfer-progress' é para evitar logs verbosos
 # 'clean install' limpa e instala o pacote Maven
-RUN ./mvnw clean install -DskipTests --no-transfer-progress
+RUN mvn clean package -DskipTests
 
 # Estágio de execução - utiliza uma imagem base menor e mais segura
 # A imagem 'jammy-jre' é ideal por ter apenas o JRE

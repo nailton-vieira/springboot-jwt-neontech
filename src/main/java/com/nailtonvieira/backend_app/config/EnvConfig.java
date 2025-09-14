@@ -1,5 +1,5 @@
 package com.nailtonvieira.backend_app.config;
-
+/*
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 
@@ -16,4 +16,5 @@ public class EnvConfig {
             System.setProperty(entry.getKey(), entry.getValue());
         });
     }
-}
+}  
+    */

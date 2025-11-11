@@ -18,8 +18,8 @@ public class DataSourceConfig {
                 .load();
         
         String dbUrl = dotenv.get("DB_URL");
-       // String username = dotenv.get("DB_USERNAME");
-       // String password = dotenv.get("DB_PASSWORD");
+        String username = dotenv.get("DB_USERNAME");
+        String password = dotenv.get("DB_PASSWORD");
         
         // Validações básicas
         if (dbUrl == null ) {
@@ -29,8 +29,8 @@ public class DataSourceConfig {
         return DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
                 .url(dbUrl)
-                //.username(username)
-                //.password(password)
+                .username(username)
+                .password(password)
                 .build();
     }
     
